@@ -30,7 +30,7 @@ public class GameUtil {
             gameOver = true;
             int topLeft = (int) positions.get(0);
             for(int i=0; i<ROW && gameOver; i++) {
-                if(topLeft != (int) positions.get(i)) {
+                if(topLeft != (int) positions.get(i*ROW + i)) {
                     gameOver = false;
                 }
             }
@@ -38,9 +38,9 @@ public class GameUtil {
 
             // Check TopRight to BottomLeft Diagonal
             gameOver = true;
-            int topRight = (int) positions.get(ROW - 1);
+            int topRight = (int) positions.get(ROW-1);
             for(int i=0; i<ROW && gameOver; i++) {
-                if(topRight != (int) positions.get(ROW - 1 - i)) {
+                if(topRight != (int) positions.get((ROW-1)*(i+1)) ) {
                     gameOver = false;
                 }
             }
