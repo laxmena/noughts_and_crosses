@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private int gameResult;
     private Thread playerCross, playerNought;
     private Handler playerCrossHandler, playerNoughtHandler;
-    private CoordinatorLayout coordinatorLayout;
+    private LinearLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-        coordinatorLayout = findViewById(R.id.main_layout);
+        mainLayout = findViewById(R.id.main_layout);
         // Initialize Game and Update the View
         initializeGame();
         updateView();
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         String message = DRAW_MESSAGE;
         if(gameResult == CROSS_WINS) message = CROSS_WINS_MESSAGE;
         else if(gameResult == NOUGHT_WINS) message = NOUGHT_WINS_MESSAGE;
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(mainLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.show();
     }
 
