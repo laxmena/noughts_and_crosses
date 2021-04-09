@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-public class FirstFragment extends Fragment {
+public class GameBoard extends Fragment {
 
     @Override
     public View onCreateView(
@@ -24,8 +24,5 @@ public class FirstFragment extends Fragment {
 //        view.findViewById(R.id.start_game).setOnClickListener(view1 -> startGame());
     }
 
-    public void startGame() {
-        System.out.println("Start Game!");
-    }
 
 }
