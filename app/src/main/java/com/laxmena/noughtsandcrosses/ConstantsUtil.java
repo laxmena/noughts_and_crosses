@@ -11,21 +11,24 @@ public class ConstantsUtil {
                                               R.id.cell10, R.id.cell11, R.id.cell12,
                                               R.id.cell20, R.id.cell21, R.id.cell22};
 
-    public static String CROSS_STRING = "X";
-    public static String NOUGHT_STRING = "O";
-    public static String EMPTY_STRING = "";
+    public static final String CROSS_STRING = "X";
+    public static final String NOUGHT_STRING = "O";
+    public static final String EMPTY_STRING = "";
 
-    public static int CROSS_COLOR = Color.parseColor("#000000");
-    public static int NOUGHT_COLOR = Color.parseColor("#000000");
-    public static int DEFAULT_COLOR = Color.parseColor("#000000");
+    public static final int CROSS_COLOR = Color.parseColor("#000000");
+    public static final int NOUGHT_COLOR = Color.parseColor("#000000");
+    public static final int DEFAULT_COLOR = Color.parseColor("#000000");
 
     public static final int EMPTY_VAL = 0;
     public static final int CROSS_VAL = 1;
     public static final int NOUGHT_VAL = 2;
 
-    public static int UNFINISHED = -1;
-    public static int DRAW = 0;
-    public static int CROSS_WINS = 1;
-    public static int NOUGHT_WINS = 2;
+    public static final int UNFINISHED = -1;
+    public static final int DRAW = 0;
+    public static final int CROSS_WINS = 1;
+    public static final int NOUGHT_WINS = 2;
 
+    public static final String CROSS_WINS_MESSAGE =  "Cross has the last laugh!!";
+    public static final String NOUGHT_WINS_MESSAGE =  "Mighty Nought wins!!";
+    public static final String DRAW_MESSAGE =  "Fierce battle, No winners in the end!!";
 }

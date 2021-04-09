@@ -5,6 +5,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -72,9 +75,8 @@ public class GameUtil {
         }
 
         // Check for Draw
-        if(availablePositions.size() == 0) {
+        if(availablePositions.size() == 0)
             return DRAW;
-        }
 
         return result;
     }
@@ -88,9 +90,29 @@ public class GameUtil {
     }
 
     public static int getNextPositionRandom(ArrayList availablePositions) {
-        int rand = random.nextInt(availablePositions.size());
-        return (int) availablePositions.get(rand);
+        synchronized (random) {
+            int rand = random.nextInt(availablePositions.size());
+            return (int) availablePositions.get(rand);
+        }
     }
 
+    public static void updateCellView(TextView cell, int value) {
+        cell.setTypeface(Typeface.DEFAULT_BOLD);
+        cell.setTextAppearance(android.R.style.TextAppearance_Material_Display3);
+        cell.setGravity(Gravity.CENTER);
+
+        if(value == CROSS_VAL) {
+            cell.setTextColor(CROSS_COLOR);
+            cell.setText(CROSS_STRING);
+        }
+        else if(value == NOUGHT_VAL) {
+            cell.setTextColor(NOUGHT_COLOR);
+            cell.setText(NOUGHT_STRING);
+        }
+        else if(value == EMPTY_VAL) {
+            cell.setTextColor(DEFAULT_COLOR);
+            cell.setText(EMPTY_STRING);
+        }
+    }
 
 }
