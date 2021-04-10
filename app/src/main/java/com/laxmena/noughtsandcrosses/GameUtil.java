@@ -22,6 +22,7 @@ import static com.laxmena.noughtsandcrosses.ConstantsUtil.ROW;
 public class GameUtil {
 
     static Random random = new Random();
+    int iter;
 
     public static int getGameResult(ArrayList positions, ArrayList availablePositions) {
         int result = UNFINISHED;
@@ -115,4 +116,60 @@ public class GameUtil {
         }
     }
 
+    public int miniMax(ArrayList positions, ArrayList availablePositions, int PLAYER_VAL) {
+        iter += 1;
+
+        int gameResult = getGameResult(positions, availablePositions);
+        System.out.println("iter: " + iter + " | Game Result: " + gameResult);
+        switch (gameResult) {
+            case CROSS_WINS: return -10;
+            case NOUGHT_WINS: return 10;
+            case DRAW: return 0;
+        }
+        ArrayList moves = new ArrayList<Integer>();
+        ArrayList scores = new ArrayList<Integer>();
+        int score;
+
+        for(int i=0; i<availablePositions.size(); i++) {
+            int moveIndex = (int)availablePositions.get(i);
+            moves.add(moveIndex);
+
+            positions.set(moveIndex, PLAYER_VAL);
+            availablePositions.remove(Integer.valueOf(moveIndex));
+            switch (PLAYER_VAL) {
+                case CROSS_VAL:
+                    score = miniMax(positions, availablePositions, NOUGHT_VAL);
+                    scores.add(score);
+                    break;
+                case NOUGHT_VAL:
+                    score = miniMax(positions, availablePositions, CROSS_VAL);
+                    scores.add(score);
+                    break;
+            }
+            positions.set(moveIndex, EMPTY_VAL);
+            availablePositions.add(moveIndex);
+        }
+
+        int bestMove = -1;
+        int bestScore = -10000;
+        System.out.println("Moves: " + moves.toString());
+        System.out.println("Scores: " + scores.toString());
+        for(int i=0; i<moves.size(); i++) {
+            score = (int) scores.get(i);
+            if(score > bestScore) {
+                bestScore = score;
+                bestMove = (int) moves.get(i);
+            }
+        }
+
+        return bestMove;
+    }
+
+    public int getNextPositionMinimax(ArrayList positions,
+                                             ArrayList availablePositions,
+                                             int PLAYER_VAL) {
+        int position = miniMax(positions, availablePositions, PLAYER_VAL);
+        iter = 0;
+        return position;
+    }
 }

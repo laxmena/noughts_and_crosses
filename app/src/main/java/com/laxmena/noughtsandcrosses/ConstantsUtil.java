@@ -31,4 +31,10 @@ public class ConstantsUtil {
     public static final String CROSS_WINS_MESSAGE =  "Cross has the last laugh!!";
     public static final String NOUGHT_WINS_MESSAGE =  "Mighty Nought wins!!";
     public static final String DRAW_MESSAGE =  "Fierce battle, No winners in the end!!";
+
+    public static final String BOARD_POSITIONS = "boardPositions";
+    public static final String AVAILABLE_POSITIONS = "availablePositions";
+    public static final String GAME_RESULT = "gameResult";
+
+    public static final int THREAD_SLEEP_TIME = 500;
 }
