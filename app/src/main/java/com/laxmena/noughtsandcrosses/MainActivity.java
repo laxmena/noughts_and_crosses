@@ -1,17 +1,13 @@
 package com.laxmena.noughtsandcrosses;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 
 import android.widget.LinearLayout;
@@ -28,7 +24,6 @@ import static com.laxmena.noughtsandcrosses.ConstantsUtil.COLUMN;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_VAL;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_WINS;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_WINS_MESSAGE;
-import static com.laxmena.noughtsandcrosses.ConstantsUtil.DRAW;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.DRAW_MESSAGE;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.EMPTY_VAL;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.GAME_RESULT;
@@ -46,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private Thread playerCross, playerNought;
     private Handler playerCrossHandler, playerNoughtHandler;
     private LinearLayout mainLayout;
+    GameUtil util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainLayout = findViewById(R.id.main_layout);
+        util = new GameUtil();
 
         if(savedInstanceState != null) {
             boardPositions = savedInstanceState.getIntegerArrayList(BOARD_POSITIONS);
@@ -97,20 +94,16 @@ public class MainActivity extends AppCompatActivity {
     // Method invoked when Start button in the UI is clicked
     public void startGame(View view) {
         initializeGame();
-        playGame();
+        startPlayerThreads();
         updateView();
     }
 
-    private void playGame() {
+    // Create and Start the Player Threads
+    private void startPlayerThreads() {
         playerCross = new PlayerCross();
         playerNought = new Thread(new PlayerNought());
         playerCross.start();
         playerNought.start();
-    }
-
-    private void cleanUp() {
-        playerCrossHandler.getLooper().quit();
-        playerNoughtHandler.getLooper().quit();
     }
 
     public void setCrossAtIndex(int index) {
@@ -128,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
     // Updates single cell view
     private void updateCellView(int index, int value) {
         TextView cell = findViewById(BOARD_UI_POSITIONS[index]);
-        GameUtil.updateCellView(cell, value);
+        util.updateCellView(cell, value);
     }
 
     // Updates entire board's view
@@ -141,13 +134,18 @@ public class MainActivity extends AppCompatActivity {
 
     // Helper method to find the game result
     private int getGameResult() {
-        gameResult = GameUtil.getGameResult(boardPositions, availablePositions);
+        gameResult = util.getGameResult(boardPositions, availablePositions);
         return gameResult;
     }
 
     // Helper method to get the next random value
     private int getNextPositionRandom() {
-        return GameUtil.getNextPositionRandom(availablePositions);
+        return util.getNextPositionRandom(availablePositions);
+    }
+
+    // Helper method to get the next playable location using Greedy Strategy
+    private int getNextPositionGreedy() {
+        return util.getNextPositionGreedy(boardPositions, availablePositions);
     }
 
     // Publish the result of the Game in the UI
@@ -202,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
      * This is the first player, so it makes the first move in the game.
      */
     public class PlayerCross extends Thread {
+
+        // Compute the board position to play next and notify Main thread
         private void makeMove() {
             Message msg = mHandler.obtainMessage(CROSS_VAL);
             msg.arg1 = getNextPositionRandom();
@@ -212,9 +212,7 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             if(gameResult != UNFINISHED) return;
             Looper.prepare();
-            // Make the first move in the game
-            makeMove();
-
+            makeMove(); // Make the first move
             // Handle messages from the UI Thread
             playerCrossHandler = new Handler(Looper.myLooper()) {
                 public void handleMessage(Message msg) {
@@ -233,27 +231,24 @@ public class MainActivity extends AppCompatActivity {
      * Since this is the second player, moves are made only after first player has played.
      */
     public class PlayerNought extends Thread {
-        GameUtil util = new GameUtil();
+        // Compute the board position to play next and notify Main thread
         private void makeMove() {
             Message msg = mHandler.obtainMessage(NOUGHT_VAL);
-            msg.arg1 = util.getNextPositionMinimax(boardPositions, availablePositions, NOUGHT_VAL);
-//            msg.arg1 = getNextPositionRandom();
+            msg.arg1 = getNextPositionGreedy();
             mHandler.sendMessage(msg);
         }
 
         @Override
         public void run() {
             Looper.prepare();
-            // Handlemessages from the UI Thread
+            // Handle messages receiving from the UI Thread
             playerNoughtHandler = new Handler(Looper.myLooper()) {
                 public void handleMessage(Message msg) {
-                    if(gameResult == UNFINISHED)
-                        makeMove();
+                    if(gameResult == UNFINISHED)  makeMove();
                 }
             };
             Looper.loop();
         }
-
     }
 
 }

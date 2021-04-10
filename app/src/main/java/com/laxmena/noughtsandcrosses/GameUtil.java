@@ -21,10 +21,11 @@ import static com.laxmena.noughtsandcrosses.ConstantsUtil.ROW;
 
 public class GameUtil {
 
-    static Random random = new Random();
-    int iter;
+    Random random = new Random();
 
-    public static int getGameResult(ArrayList positions, ArrayList availablePositions) {
+    // Logic to check if the match is over and if there are any winners.
+    // This logic is scalable, and can be used for any grid size.
+    public int getGameResult(ArrayList positions, ArrayList availablePositions) {
         int result = UNFINISHED;
         boolean gameOver;
 
@@ -82,22 +83,25 @@ public class GameUtil {
         return result;
     }
 
-    private static int getWinnerForValue(int value) {
-        switch (value) {
+    // Pass gameResult to this method to get the winner
+    private int getWinnerForValue(int gameResult) {
+        switch (gameResult) {
             case CROSS_VAL: return CROSS_WINS;
             case NOUGHT_VAL: return NOUGHT_WINS;
             default: return UNFINISHED;
         }
     }
 
-    public static int getNextPositionRandom(ArrayList availablePositions) {
+    // This strategy returns random position, where the player can play next.
+    public int getNextPositionRandom(ArrayList availablePositions) {
         synchronized (random) {
             int rand = random.nextInt(availablePositions.size());
             return (int) availablePositions.get(rand);
         }
     }
 
-    public static void updateCellView(TextView cell, int value) {
+    // Updates the view of the given cell with the respective value
+    public void updateCellView(TextView cell, int value) {
         cell.setTypeface(Typeface.DEFAULT_BOLD);
         cell.setTextAppearance(android.R.style.TextAppearance_Material_Display3);
         cell.setGravity(Gravity.CENTER);
@@ -116,60 +120,38 @@ public class GameUtil {
         }
     }
 
-    public int miniMax(ArrayList positions, ArrayList availablePositions, int PLAYER_VAL) {
-        iter += 1;
-
-        int gameResult = getGameResult(positions, availablePositions);
-        System.out.println("iter: " + iter + " | Game Result: " + gameResult);
-        switch (gameResult) {
-            case CROSS_WINS: return -10;
-            case NOUGHT_WINS: return 10;
-            case DRAW: return 0;
-        }
-        ArrayList moves = new ArrayList<Integer>();
-        ArrayList scores = new ArrayList<Integer>();
-        int score;
+    // Uses Greedy Strategy to find the next move to be played.
+    // If there is any immediate threat or a chance for immediate victory, we capitalize on that.
+    public int getNextPositionGreedy(ArrayList positions, ArrayList availablePositions) {
+        ArrayList<Integer> newAvailablePositions;
+        int crossResult, noughtResult;
 
         for(int i=0; i<availablePositions.size(); i++) {
             int moveIndex = (int)availablePositions.get(i);
-            moves.add(moveIndex);
+            newAvailablePositions = (ArrayList<Integer>) availablePositions.clone();
+            newAvailablePositions.remove(Integer.valueOf(moveIndex));
 
-            positions.set(moveIndex, PLAYER_VAL);
-            availablePositions.remove(Integer.valueOf(moveIndex));
-            switch (PLAYER_VAL) {
-                case CROSS_VAL:
-                    score = miniMax(positions, availablePositions, NOUGHT_VAL);
-                    scores.add(score);
-                    break;
-                case NOUGHT_VAL:
-                    score = miniMax(positions, availablePositions, CROSS_VAL);
-                    scores.add(score);
-                    break;
-            }
+            // logic for cross wins
+            positions.set(moveIndex, CROSS_VAL);
+            crossResult = getGameResult(positions, newAvailablePositions);
+            // logic for nought wins
+            positions.set(moveIndex, NOUGHT_VAL);
+            noughtResult = getGameResult(positions, newAvailablePositions);
+
+            // Reset the value
             positions.set(moveIndex, EMPTY_VAL);
-            availablePositions.add(moveIndex);
-        }
 
-        int bestMove = -1;
-        int bestScore = -10000;
-        System.out.println("Moves: " + moves.toString());
-        System.out.println("Scores: " + scores.toString());
-        for(int i=0; i<moves.size(); i++) {
-            score = (int) scores.get(i);
-            if(score > bestScore) {
-                bestScore = score;
-                bestMove = (int) moves.get(i);
+            // If either of crossResult or noughtResult is not UNFINISHED, We play there.
+            // Playing in this cell will either ensure victory
+            // or prevent Opponent to secure victory by occupy this threatening cell.
+            if(crossResult != UNFINISHED || noughtResult != UNFINISHED) {
+                return moveIndex;
             }
         }
 
-        return bestMove;
+        // If there is no immediate threat or victory opportunity, we play a random position.
+        return getNextPositionRandom(availablePositions);
     }
 
-    public int getNextPositionMinimax(ArrayList positions,
-                                             ArrayList availablePositions,
-                                             int PLAYER_VAL) {
-        int position = miniMax(positions, availablePositions, PLAYER_VAL);
-        iter = 0;
-        return position;
-    }
+
 }
