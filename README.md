@@ -1,3 +1,5 @@
+<img src="./images/banner.png" style="height:300px">
+
 # NOUGHTS AND CROSSES
 Tic-Tac-Toe Android Application created as part of CS478 Software Development for Mobile Applications course at The University of Illinois at Chicago. Two bots play against each other, and we the user spectate the battle between the bots.
 
@@ -23,6 +25,30 @@ Tic-Tac-Toe Android Application created as part of CS478 Software Development fo
 4. Build and Run this app using a Emulator or Physical device.
 
 ## App Screenshots
-**Light Mode:**
+**Portrait:**
+<table>
+    <tr>
+        <td>
+            Cross Wins <br/>
+            <img src="images/light_portrait_cross.png" width="200"/>
+        </td>
+        <td>
+            Nought Wins <br/>
+            <img src="images/light_portrait_nought.png" width="200"/>
+        </td>
+        <td>
+            Draw (Dark Mode) <br/>
+            <img src="images/dark_portrait.png" width="200"/>
+        </td>
+    </tr>
+</table>
 
-**Dark Mode:**
+
+**Landscape:**
+<table>
+    <tr>
+        <td>
+            <img src="images/dark_landscape.png" height="200"/>
+        </td>
+    </tr>
+</table>
