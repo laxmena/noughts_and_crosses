@@ -39,6 +39,23 @@ import static com.laxmena.noughtsandcrosses.ConstantsUtil.ROW;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.THREAD_SLEEP_TIME;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.UNFINISHED;
 
+/**
+ * Noughts and Crosses - Bot vs Bot Tic-Tac-Toe app.
+ *
+ * - Two Bots plays the game of TicTacToe against each other.
+ * - Bot1 or "Player Cross" randomly plays in the board.
+ * - Bot 2 or "Player Nought" uses Greedy Strategy. If there is an immediate threat or an
+ * immediate opportunity to win the game, This bot plays that position.
+ * - This app supports 'Dark Mode'.
+ * - App is designed in a way that it can be easily extended to Playing grids
+ * of any size (eg. 4*4, 5*5, etc). Minimal changes to the UI and GameUtil reference to the cells \
+ * will be sufficient.
+ *
+ * @author Lakshmanan Meiyappan
+ * @version 1.0
+ * @since 04/11/2021
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private ArrayList boardPositions, availablePositions;
@@ -118,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cleanUpThreads() {
+        // Remove un-executed messages from the previous game
         mHandler.removeCallbacksAndMessages(null);
         if(playerCross != null && playerCross.isAlive()) {
             playerCrossHandler.removeCallbacksAndMessages(null);
@@ -129,12 +147,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Method sets Cross at the given index
     public void setCrossAtIndex(int index) {
         boardPositions.set(index, CROSS_VAL);
         availablePositions.remove(Integer.valueOf(index));
         updateCellView(index, CROSS_VAL);
     }
 
+    // Method sets Nought (O) at the given index
     public void setNoughtAtIndex(int index) {
         boardPositions.set(index, NOUGHT_VAL);
         availablePositions.remove(Integer.valueOf(index));
@@ -196,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         resultTextView.setText(message);
     }
 
+    // Used to show delay between moves in the UI
     private void sleepThread(Thread thread) {
         try {
             thread.sleep(THREAD_SLEEP_TIME);
