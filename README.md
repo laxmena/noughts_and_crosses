@@ -1,5 +1,5 @@
 # Noughts and Crosses
-<img src="./images/Banner.png" style="height:250px">
+<img src="./images/Banner.png" width="750px">
 
 ## What's Noughts and Crosses?
 Noughts and Crosses is a *Tic-Tac-Toe Android Application* created as part of **CS478 Software Development for Mobile Applications course** at **The University of Illinois at Chicago**. Two bots play against each other using different strategies, and we can spectate the exciting battle between the bots.
