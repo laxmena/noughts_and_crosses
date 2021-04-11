@@ -20,4 +20,11 @@
         android:onClick="startGame"
         android:layout_margin="20dp"/>
 
+    <TextView
+        android:id="@+id/result_text"
+        android:textStyle="italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorPrimary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
 </LinearLayout>

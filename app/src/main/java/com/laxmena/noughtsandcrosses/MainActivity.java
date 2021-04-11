@@ -24,12 +24,17 @@ import static com.laxmena.noughtsandcrosses.ConstantsUtil.COLUMN;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_VAL;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_WINS;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_WINS_MESSAGE;
+import static com.laxmena.noughtsandcrosses.ConstantsUtil.CROSS_WINS_TOAST_MESSAGE;
+import static com.laxmena.noughtsandcrosses.ConstantsUtil.DRAW;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.DRAW_MESSAGE;
+import static com.laxmena.noughtsandcrosses.ConstantsUtil.DRAW_TOAST_MESSAGE;
+import static com.laxmena.noughtsandcrosses.ConstantsUtil.EMPTY_MESSAGE;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.EMPTY_VAL;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.GAME_RESULT;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.NOUGHT_VAL;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.NOUGHT_WINS;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.NOUGHT_WINS_MESSAGE;
+import static com.laxmena.noughtsandcrosses.ConstantsUtil.NOUGHT_WINS_TOAST_MESSAGE;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.ROW;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.THREAD_SLEEP_TIME;
 import static com.laxmena.noughtsandcrosses.ConstantsUtil.UNFINISHED;
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private Thread playerCross, playerNought;
     private Handler playerCrossHandler, playerNoughtHandler;
     private LinearLayout mainLayout;
+    private TextView resultTextView;
     GameUtil util;
 
     @Override
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainLayout = findViewById(R.id.main_layout);
+        resultTextView = findViewById(R.id.result_text);
         util = new GameUtil();
 
         if(savedInstanceState != null) {
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             // Initialize Game and Update the View
             initializeGame();
         }
+        publishWinner();
         updateView();
     }
 
@@ -89,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
             boardPositions.add(EMPTY_VAL);
             availablePositions.add(i);
         }
+
+        publishWinner();
     }
 
     // Method invoked when Start button in the UI is clicked
@@ -100,10 +110,23 @@ public class MainActivity extends AppCompatActivity {
 
     // Create and Start the Player Threads
     private void startPlayerThreads() {
+        cleanUpThreads();
         playerCross = new PlayerCross();
-        playerNought = new Thread(new PlayerNought());
+        playerNought = new PlayerNought();
         playerCross.start();
         playerNought.start();
+    }
+
+    public void cleanUpThreads() {
+        mHandler.removeCallbacksAndMessages(null);
+        if(playerCross != null && playerCross.isAlive()) {
+            playerCrossHandler.removeCallbacksAndMessages(null);
+            playerCrossHandler.getLooper().quit();
+        }
+        if(playerNought != null && playerNought.isAlive()) {
+            playerNoughtHandler.removeCallbacksAndMessages(null);
+            playerCrossHandler.getLooper().quit();
+        }
     }
 
     public void setCrossAtIndex(int index) {
@@ -150,12 +173,27 @@ public class MainActivity extends AppCompatActivity {
 
     // Publish the result of the Game in the UI
     private void publishWinner() {
-        updateView();
-        String message = DRAW_MESSAGE;
-        if(gameResult == CROSS_WINS) message = CROSS_WINS_MESSAGE;
-        else if(gameResult == NOUGHT_WINS) message = NOUGHT_WINS_MESSAGE;
-        Snackbar snackbar = Snackbar.make(mainLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.show();
+        String toastMessage = EMPTY_MESSAGE;
+        String message = EMPTY_MESSAGE;
+
+        if(gameResult == CROSS_WINS) {
+            toastMessage = CROSS_WINS_TOAST_MESSAGE;
+            message = CROSS_WINS_MESSAGE;
+        }
+        else if(gameResult == NOUGHT_WINS){
+            toastMessage = NOUGHT_WINS_TOAST_MESSAGE;
+            message = NOUGHT_WINS_MESSAGE;
+        }
+        else if(gameResult == DRAW) {
+            toastMessage = DRAW_TOAST_MESSAGE;
+            message = DRAW_MESSAGE;
+        }
+
+        if(gameResult != UNFINISHED) {
+            Snackbar snackbar = Snackbar.make(mainLayout, toastMessage, Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
+        resultTextView.setText(message);
     }
 
     private void sleepThread(Thread thread) {
