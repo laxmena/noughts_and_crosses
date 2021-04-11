@@ -1,6 +1,7 @@
+
 <img src="./images/banner.png" style="height:300px">
 
-# NOUGHTS AND CROSSES
+# Noughts And Crosses
 Tic-Tac-Toe Android Application created as part of CS478 Software Development for Mobile Applications course at The University of Illinois at Chicago. Two bots play against each other, and we the user spectate the battle between the bots.
 
 ## Requirements
