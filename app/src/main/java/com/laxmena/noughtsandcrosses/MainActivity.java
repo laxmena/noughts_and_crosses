@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(playerNought != null && playerNought.isAlive()) {
             playerNoughtHandler.removeCallbacksAndMessages(null);
-            playerCrossHandler.getLooper().quit();
+            playerNoughtHandler.getLooper().quit();
         }
     }
 
