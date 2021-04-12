@@ -20,7 +20,9 @@ Noughts and Crosses is a *Tic-Tac-Toe Android Application* created as part of **
 
 ## How to build it?
 1. Download or clone this repository using the following command
-```git clone https://github.com/laxmena/noughts_and_crosses.git```
+```
+git clone https://github.com/laxmena/noughts_and_crosses.git
+```
 2. Open this project in Android Studio. 
 3. Make sure the requirements are met, this app is tested using Samsung M30s and Pixel3XL devices.
 4. Build and Run this app using a Emulator or Physical device.
