@@ -59,3 +59,5 @@ Noughts and Crosses is a *Tic-Tac-Toe Android Application* created as part of **
 If you have any questions, feedbacks, suggestions or recommendations, feel free to contact me through [Email](mailto:WriteTo@laxmena.com) or [LinkedIn](https://www.linkedin.com/in/lakshmanan-meiyappan/).
 
 Check out my website and Blog here: [https://laxmena.com](http://laxmena.com/).
+
+[![Visitor](https://visitor-badge.laobi.icu/badge?page_id=laxmena.AndroidApps.NoughtsAndCrosses)](#)
