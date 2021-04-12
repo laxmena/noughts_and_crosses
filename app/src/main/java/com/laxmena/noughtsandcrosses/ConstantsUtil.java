@@ -36,7 +36,7 @@ public class ConstantsUtil {
     public static final String AVAILABLE_POSITIONS = "availablePositions";
     public static final String GAME_RESULT = "gameResult";
 
-    public static final int THREAD_SLEEP_TIME = 250;
+    public static final int THREAD_SLEEP_TIME = 200;
 
     public static final String CROSS_WINS_MESSAGE = "Cross Wins!";
     public static final String NOUGHT_WINS_MESSAGE = "Nought Wins!";

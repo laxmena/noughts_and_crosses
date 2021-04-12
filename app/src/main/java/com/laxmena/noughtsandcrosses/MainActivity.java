@@ -114,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
             boardPositions.add(EMPTY_VAL);
             availablePositions.add(i);
         }
-
         publishWinner();
     }
 
     // Method invoked when Start button in the UI is clicked
     public void startGame(View view) {
+        cleanUpThreads();
         initializeGame();
         startPlayerThreads();
         updateView();
@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Create and Start the Player Threads
     private void startPlayerThreads() {
-        cleanUpThreads();
         playerCross = new PlayerCross();
         playerNought = new PlayerNought();
         playerCross.start();
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cleanUpThreads() {
-        // Remove un-executed messages from the previous game
+        // If there are un-executed messages from the previous game, clear the message queue.
         mHandler.removeCallbacksAndMessages(null);
         if(playerCross != null && playerCross.isAlive()) {
             playerCrossHandler.removeCallbacksAndMessages(null);
