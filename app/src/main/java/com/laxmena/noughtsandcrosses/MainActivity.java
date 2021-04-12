@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Method invoked when Start button in the UI is clicked
     public void startGame(View view) {
-        cleanUpThreads();
+        cleanUpOldThreads();
         initializeGame();
         startPlayerThreads();
         updateView();
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         playerNought.start();
     }
 
-    public void cleanUpThreads() {
+    public void cleanUpOldThreads() {
         // If there are un-executed messages from the previous game, clear the message queue.
         mHandler.removeCallbacksAndMessages(null);
         if(playerCross != null && playerCross.isAlive()) {
